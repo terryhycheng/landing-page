@@ -25,37 +25,63 @@
 const sections = document.querySelectorAll("[data-nav]");
 const nav = document.querySelector("#navbar__list");
 
-/**
- * End Global Variables
- * Start Helper Functions
+/** End Global Variables
  *
  */
 
-/**
- * End Helper Functions
- * Begin Main Functions
+/** Define Functions
  *
  */
 
 // build the nav
-for (let i = 0; i < sections.length; i++) {
-  const item = document.createElement("li");
-  item.innerText = sections[i].querySelector("h2").innerText;
-  nav.append(item);
-}
+const buildNav = () => {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < sections.length; i++) {
+    const item = document.createElement("li");
+    item.classList = "menu__link";
+    item.innerText = sections[i].querySelector("h2").innerText;
+    // add an evnet istener to control scrolling after the button being clicked
+    item.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      const sectionId = `section${i + 1}`;
+      document.querySelector(`#${sectionId}`).scrollIntoView({
+        behavior: "smooth",
+      });
+    });
+    fragment.appendChild(item);
+  }
+  nav.append(fragment);
+};
 
 // Add class 'active' to section when near top of viewport
+const activate = () => {
+  for (let k = 0; k < sections.length; k++) {
+    const title = document.querySelectorAll("h2")[k];
+    let elem = title.getBoundingClientRect();
+    if (elem.top < 350 && elem.top > 30) {
+      nav.children[k].classList.add("menu__link__active");
+      sections[k].classList.add("your-active-class");
+    } else {
+      nav.children[k].classList.remove("menu__link__active");
+      sections[k].classList.remove("your-active-class");
+    }
+  }
+};
 
-// Scroll to anchor ID using scrollTO event
+/** End Define Functions
+ *
+ */
 
-/**
- * End Main Functions
- * Begin Events
+/** Add Event Listeners
  *
  */
 
 // Build menu
-
-// Scroll to section on link click
+document.addEventListener("DOMContentLoaded", buildNav);
 
 // Set sections as active
+document.addEventListener("scroll", activate);
+
+/** End Add Event Listeners
+ *
+ */
